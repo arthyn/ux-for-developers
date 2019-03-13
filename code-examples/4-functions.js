@@ -41,7 +41,7 @@ function stripeCharge(token, amount) {
       });
 }
 
-function ProcessPaypalCreditCardPayment(card, address, amount) { 
+function ProcessStripeCreditCardPayment(card, address, amount) { 
     var tokenInfo = {
         card: {
             address_city: address.city,
@@ -61,7 +61,7 @@ function ProcessPaypalCreditCardPayment(card, address, amount) {
     createStripeToken(tokenInfo, (token) => stripeCharge(token, amount));
 }
 
-function ProcessPaypalBankPayment(bankAccount, amount) {
+function ProcessStripeBankPayment(bankAccount, amount) {
     const tokenInfo = {
         bank_account: {
             country: bankAccount.country,

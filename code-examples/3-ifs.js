@@ -20,7 +20,7 @@ const bankAccount = {
     country: 'US'
 }
 
-function ProcessPaypalCreditCardPayment(card, address, amount) { 
+function ProcessStripeCreditCardPayment(card, address, amount) { 
     var stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
     stripe.tokens.create({
         card: {
@@ -52,7 +52,7 @@ function ProcessPaypalCreditCardPayment(card, address, amount) {
         });
 }
 
-function ProcessPaypalBankPayment(bankAccount, amount) {
+function ProcessStripeBankPayment(bankAccount, amount) {
     var stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc"); 
     stripe.tokens.create({
         bank_account: {
