@@ -1,8 +1,20 @@
-import theme from 'mdx-deck/themes'
+import { yellow } from 'mdx-deck/themes'
+import okaidia from 'react-syntax-highlighter/styles/prism/okaidia'
 
 export default {
-  ...theme,
-
+  ...yellow,
+  colors: {
+    ...yellow.colors,
+    text: '#3E3E3E',
+    background: '#FFC439' 
+  },
+  Slides: {
+    ...yellow.Slides,
+    overflow: 'visible'
+  },
+  prism: {
+    style: okaidia
+  }
   // Customize your presentation theme here.
   //
   // Read the docs for more info:

@@ -1,23 +1,526 @@
-import { Head } from 'mdx-deck'
+import { Head, Image } from 'mdx-deck'
+import code from './code'
 
-export { default as theme } from './theme'
+export theme from './theme'
 
 <Head>
-  <title>Presentation Title</title>
+  <title>UX for Developers</title>
 </Head>
 
-# Hello
+# UX for Developers
 
 ---
 
-## Edit this file
-
-To create your presentation
+## What is UX?
 
 ```notes
-- Create speaker notes in fenced code blocks
+- everything the user experiences when visiting your site or using your app
+
+- what context are they in that you can know ahead of time?
 ```
 
 ---
 
-<https://github.com/jxnblk/mdx-deck>
+## What is refactoring?
+
+```notes
+- the act of changing a code to reflect a better design but the same logic is upheld
+
+- what parallels can be drawn?
+```
+
+---
+
+## Let's look at some code
+
+---
+export default code;
+
+```js
+function Process(processorType, accountType, expiration, address, name, cvv, amount, city, zip, state, number, country, routingNumber, bankAccountType) {
+    var stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
+
+    if (processorType == 'stripe') {
+        if (accountType == 'credit-card') {
+            stripe.tokens.create({
+                card: {
+                    address_city: city,
+                    number: number,
+                    address_line1: address.split('\n')[0],
+                    address_line2: address.split('\n')[1],
+                    exp_month: expiration.split('/')[0],
+                    exp_year: expiration.split('/')[1],
+                    cvc: cvv,
+                    address_state: state,
+                    name: name,
+                    address_country: country,
+                    address_zip: zip
+                }
+                }, function(err, token) {
+                    if (err) {
+                        return;
+                    }
+            
+                    (async () => {
+                        const charge = await stripe.charges.create({
+                          amount: amount,
+                          currency: 'usd',
+                          description: '',
+                          source: token,
+                        });
+                      })();
+                });
+    } else if (accountType == 'bank') {
+        stripe.tokens.create({
+            bank_account: {
+                country: country,
+                currency: 'usd',
+                account_holder_name: name,
+                account_holder_type: bankAccountType,
+                routing_number: routingNumber,
+                account_number: number
+              }
+            }, function(err, token) {
+                if (err) {
+                    return;
+                }
+        
+                (async () => {
+                    const charge = await stripe.charges.create({
+                      amount: amount,
+                      currency: 'usd',
+                      description: '',
+                      source: token,
+                    });
+                  })();
+            });
+    
+        } else if (accountType == 'invoice') {
+            return createInvoice();
+        }
+    } else if (processorType == 'paypal') {
+            if (accountType == 'credit-card') {
+                ...
+            } else if (accountType == 'bank') {
+                ...
+        } 
+            else if (accountType == 'invoice') {
+                return createInvoice();
+            }
+    }
+}
+
+```
+
+---
+
+## And the UI to go with it
+
+---
+
+<Image src="ui-examples/Start.png" style={{
+  backgroundSize: 'contain'
+}}/>
+
+---
+
+## General Principles
+
+- Jakob's Law
+- Aesthetic Usability Effect
+
+```notes
+- users spend most of their time on other sites so make yours familiar
+
+- aesthetically pleasing UI is perceived as easier to use. Lower's hassle budget
+```
+
+---
+
+## Organization & Relationships
+
+- Miller's Law
+- Law of Common Region
+- Law of Proximity
+- Law of Similarity
+
+```notes
+- users can keep an average of 7 things in their mind +-2
+
+- elements within a clear boundary are perceived as related
+
+- elements near each other are perceived as related
+
+- elements that look similar are perceived as related
+```
+
+---
+export default code;
+
+```js
+const address = {
+    street: '123 Meadow Lane',
+    city: 'Lafayette',
+    zip: '70506',
+    state: 'LA',
+    country: 'US'
+}
+
+const card = {
+    number: '4111 1111 1111 1111',
+    name: 'Hunter Miller',
+    expiration: '02/22',
+    cvv: '222'
+}
+
+const bankAccount = {
+    number: '000123456789',
+    routing: '110000000',
+    type: 'individual',
+    country: 'US'
+}
+
+function Process(processorType, accountType, card, address, bankAccount, amount) {
+    var stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
+
+    if (processorType == 'stripe') {
+        if (accountType == 'credit-card') {
+            stripe.tokens.create({
+                card: {
+                    address_city: address.city,
+                    number: card.number,
+                    address_line1: address.street.split('\n')[0],
+                    address_line2: address.street.split('\n')[1],
+                    exp_month: card.expiration.split('/')[0],
+                    exp_year: card.expiration.split('/')[1],
+                    cvc: card.cvv,
+                    address_state: address.state,
+                    name: card.name,
+                    address_country: address.country,
+                    address_zip: address.zip
+                }
+                }, function(err, token) {
+                    if (err) {
+                        return;
+                    }
+            
+                    (async () => {
+                        const charge = await stripe.charges.create({
+                          amount: amount,
+                          currency: 'usd',
+                          description: '',
+                          source: token,
+                        });
+                      })();
+                });
+    } else if (accountType == 'bank') {
+        stripe.tokens.create({
+            bank_account: {
+                country: bankAccount.country,
+                currency: 'usd',
+                account_holder_name: bankAccount.name,
+                account_holder_type: bankAccount.type,
+                routing_number: bankAccount.routingNumber,
+                account_number: bankAccount.number
+              }
+            }, function(err, token) {
+                if (err) {
+                    return;
+                }
+        
+                (async () => {
+                    const charge = await stripe.charges.create({
+                      amount: amount,
+                      currency: 'usd',
+                      description: '',
+                      source: token,
+                    });
+                  })();
+            });
+    
+        } else if (accountType == 'invoice') {
+            return createInvoice();
+        }
+    } else if (processorType == 'paypal') {
+            if (accountType == 'credit-card') {
+                ...
+            } else if (accountType == 'bank') {
+                ...
+        } 
+            else if (accountType == 'invoice') {
+                return createInvoice();
+            }
+    }
+}
+```
+
+---
+
+<Image src="ui-examples/Step-1.png" style={{
+  backgroundSize: 'contain'
+}}/>
+
+---
+
+## Organization & Relationships pt. 2
+
+- Law of Uniform Connectedness
+- Von Restorff Effect
+- Serial Position Effect
+
+
+```notes
+- elements that are visually connect (by a line or something) are perceived as being related ie. if statements, form sections
+
+- elements that differ in a sea of similar elements will stand out, ie paypal, invoice code
+
+- users tend to remember the first and last elements of a series
+```
+---
+export default code;
+
+```js
+const address = {
+    street: '123 Meadow Lane',
+    city: 'Lafayette',
+    zip: '70506',
+    state: 'LA',
+    country: 'US'
+}
+
+const card = {
+    number: '4111 1111 1111 1111',
+    name: 'Hunter Miller',
+    expiration: '02/22',
+    cvv: '222'
+}
+
+const bankAccount = {
+    number: '000123456789',
+    routing: '110000000',
+    type: 'individual',
+    country: 'US'
+}
+
+function ProcessPaypalCreditCardPayment(card, address, amount) { 
+    var stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
+    stripe.tokens.create({
+        card: {
+            address_city: address.city,
+            number: card.number,
+            address_line1: address.street.split('\n')[0],
+            address_line2: address.street.split('\n')[1],
+            exp_month: card.expiration.split('/')[0],
+            exp_year: card.expiration.split('/')[1],
+            cvc: card.cvv,
+            address_state: address.state,
+            name: card.name,
+            address_country: address.country,
+            address_zip: address.zip
+        }
+        }, function(err, token) {
+            if (err) {
+                return;
+            }
+    
+            (async () => {
+                const charge = await stripe.charges.create({
+                  amount: amount,
+                  currency: 'usd',
+                  description: '',
+                  source: token,
+                });
+              })();
+        });
+}
+
+function ProcessPaypalBankPayment(bankAccount, amount) {
+    var stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc"); 
+    stripe.tokens.create({
+        bank_account: {
+            country: bankAccount.country,
+            currency: 'usd',
+            account_holder_name: bankAccount.name,
+            account_holder_type: bankAccount.type,
+            routing_number: bankAccount.routingNumber,
+            account_number: bankAccount.number
+        }
+        }, function(err, token) {
+            if (err) {
+                return;
+            }
+    
+            (async () => {
+                const charge = await stripe.charges.create({
+                amount: amount,
+                currency: 'usd',
+                description: '',
+                source: token,
+                });
+            })();
+        });
+}
+
+function ProcessInvoice() {
+    return createInvoice();
+}
+
+function ProcessPaypalCreditCardPayment(card, address, amount) { ..... }
+
+function ProcessPaypalBankPayment(bankInfo, amount) { ..... }
+```
+
+---
+
+<Image src="ui-examples/Step-2.png" style={{
+  backgroundSize: 'contain'
+}}/>
+
+---
+
+## Feedback & Flow
+
+- Doherty Threshold
+- Fitts' Law
+- Hick's Law
+- Zeigarnik Effect
+
+```notes
+- productivity soars when a computer can keep up with the user at a pace of 400ms
+
+- the time to acquire a target is a function of the size and distance of the target
+
+- the time it takes to make a decision increases with the number and complexity of choices
+
+- incomplete tasks are the easiest to remember
+```
+---
+export default code;
+
+```js
+const stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
+
+const address = {
+    street: '123 Meadow Lane',
+    city: 'Lafayette',
+    zip: '70506',
+    state: 'LA',
+    country: 'US'
+}
+
+const card = {
+    number: '4111 1111 1111 1111',
+    name: 'Hunter Miller',
+    expiration: '02/22',
+    cvv: '222'
+}
+
+const bankAccount = {
+    number: '000123456789',
+    routing: '110000000',
+    type: 'individual',
+    country: 'US'
+}
+
+function createStripeToken(tokenInfo, callback) {
+    stripe.tokens.create(tokenInfo, function(err, token) {
+        if (err) {
+            return;
+        }
+
+        callback(token);
+    });
+}
+
+function stripeCharge(token, amount) {
+    return stripe.charges.create({
+        amount: amount,
+        currency: 'usd',
+        description: '',
+        source: token,
+      });
+}
+
+function ProcessPaypalCreditCardPayment(card, address, amount) { 
+    var tokenInfo = {
+        card: {
+            address_city: address.city,
+            number: card.number,
+            address_line1: address.street.split('\n')[0],
+            address_line2: address.street.split('\n')[1],
+            exp_month: card.expiration.split('/')[0],
+            exp_year: card.expiration.split('/')[1],
+            cvc: card.cvv,
+            address_state: address.state,
+            name: card.name,
+            address_country: address.country,
+            address_zip: address.zip
+        }
+    };
+
+    createStripeToken(tokenInfo, (token) => stripeCharge(token, amount));
+}
+
+function ProcessPaypalBankPayment(bankAccount, amount) {
+    const tokenInfo = {
+        bank_account: {
+            country: bankAccount.country,
+            currency: 'usd',
+            account_holder_name: bankAccount.name,
+            account_holder_type: bankAccount.type,
+            routing_number: bankAccount.routingNumber,
+            account_number: bankAccount.number
+        }
+    };
+    
+    createStripeToken(tokenInfo, (token) => stripeCharge(token, amount));
+}
+
+function ProcessInvoice() {
+    return createInvoice();
+}
+
+function ProcessPaypalCreditCardPayment(card, address, amount) { ..... }
+
+function ProcessPaypalBankPayment(bankInfo, amount) { ..... }
+```
+
+---
+
+<Image src="ui-examples/Step-3.png" style={{
+  backgroundSize: 'contain'
+}}/>
+
+---
+
+## Control, Complexity & Value
+- Parkinson’s Law
+- Postel's Law 
+- Occam's Razor
+- Pareto Principle
+- Tesler's Law/Law of Conservation of Complexity
+
+```notes
+- any task will inflate until all of the available time is spent
+
+- be liberal in what you accept, conservative in what you send
+
+- among competing hypotheses that predict equally well, the fewest assumptions wins. remove unnecessarily complex functionality that makes lots of assumptions about the user
+
+- 80% of the value comes from 20% of the app/effort/etc
+
+- a certain level of complexity is retained and cannot be removed or refactored, based on offered features
+```
+---
+
+## Conclusion
+
+---
+
+# Thanks!
+
+### Twitter: @hmillerdev
+
+### Email: hunter@technicallyux.com
+
+#### Made with mdx-deck & https://lawsofux.com
