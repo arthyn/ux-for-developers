@@ -8,6 +8,7 @@
     "help": "mdx-deck"
   },
   "devDependencies": {
+    "file-loader": "^3.0.1",
     "mdx-deck": "^1.6.7"
   },
   "name": "test-deck",
